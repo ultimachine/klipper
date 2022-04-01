@@ -79,6 +79,13 @@ ReadRegisters = [
 ]
 
 Fields = {}
+Fields["DRV_CONF"] = {
+    "bbmtime":                  0x1F << 0,
+    "bbmclks":                  0x0F << 8,
+    "otselect":                 0x03 << 16,
+    "drvstrength":              0x03 << 18,
+    "filt_isense":              0x03 << 20,
+}
 Fields["COOLCONF"] = {
     "semin":                    0x0F << 0,
     "seup":                     0x03 << 5,
@@ -300,8 +307,14 @@ class TMC5160:
         self.get_status = cmdhelper.get_status
         # Setup basic register values
         tmc.TMCStealthchopHelper(config, self.mcu_tmc, TMC_FREQUENCY)
-        #   CHOPCONF
+        #   DRV_CONF
         set_config_field = self.fields.set_config_field
+        set_config_field(config, "bbmtime", 0)
+        set_config_field(config, "bbmclks", 6)
+        set_config_field(config, "otselect", 0)
+        set_config_field(config, "drvstrength", 2)
+        set_config_field(config, "filt_isense", 0)
+        #   CHOPCONF
         set_config_field(config, "toff", 3)
         set_config_field(config, "hstrt", 5)
         set_config_field(config, "hend", 2)
